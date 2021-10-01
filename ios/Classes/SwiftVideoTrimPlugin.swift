@@ -12,14 +12,15 @@ public class SwiftVideoTrimPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let args = call.arguments as? Dictionary<String, Any>
-    if let path = args?["path"] as? String, let start = args?["start"] as? Int, let end = args?["end"] as? Int{
-        cropVideo(sourceURL1: URL.init(fileURLWithPath: path), statTime: Float(start), endTime: Float(end), result: result)
+    if let path = args?["path"] as? String, let start = args?["start"] as? Int{
+        let end = args?["end"] as? Int
+        cropVideo(sourceURL1: URL.init(fileURLWithPath: path), statTime: Float(start), endTime: end == nil ? nil :Float(end!), result: result)
     }
   
   }
     
     // basically taken from https://stackoverflow.com/questions/35696188/how-to-trim-a-video-in-swift-for-a-particular-time
-    func cropVideo(sourceURL1: URL, statTime:Float, endTime:Float, result: @escaping FlutterResult)
+    func cropVideo(sourceURL1: URL, statTime:Float, endTime:Float?, result: @escaping FlutterResult)
 {
     let manager = FileManager.default
 
@@ -47,7 +48,7 @@ public class SwiftVideoTrimPlugin: NSObject, FlutterPlugin {
         exportSession.outputFileType = .mp4
 
         let startTime = CMTime(seconds: Double(start ) / 1000, preferredTimescale: 1000)
-        let endTime = CMTime(seconds: Double(end ) / 1000, preferredTimescale: 1000)
+        let endTime = endTime == nil ? asset.duration : CMTime(seconds: Double(end!) / 1000, preferredTimescale: 1000)
         let timeRange = CMTimeRange(start: startTime, end: endTime)
 
         exportSession.timeRange = timeRange

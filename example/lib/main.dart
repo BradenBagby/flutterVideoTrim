@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   XFile? video;
   VideoPlayerController? controller;
   final startMillisecondsController = TextEditingController(text: "0");
-  final endMillisecondsController = TextEditingController(text: "0");
+  final endMillisecondsController = TextEditingController();
   bool trimmed = false;
 
   @override
@@ -94,10 +94,11 @@ class _MyAppState extends State<MyApp> {
                               onPressed: () async {
                                 final newPath = await VideoTrim.trim(
                                     video!.path,
-                                    startMilliseconds:
-                                        _getInput(startMillisecondsController),
-                                    endMilliseconds:
-                                        _getInput(endMillisecondsController));
+                                    startMilliseconds: int.tryParse(
+                                            startMillisecondsController.text) ??
+                                        0,
+                                    endMilliseconds: int.tryParse(
+                                        endMillisecondsController.text));
                                 setState(() {
                                   trimmed = true;
                                 });
@@ -111,6 +112,7 @@ class _MyAppState extends State<MyApp> {
                         ElevatedButton(
                             onPressed: () {
                               setState(() {
+                                trimmed = false;
                                 controller = null;
                               });
                             },
@@ -120,7 +122,4 @@ class _MyAppState extends State<MyApp> {
           )),
     );
   }
-
-  int _getInput(TextEditingController controller) =>
-      int.tryParse(controller.text) ?? 0;
 }
