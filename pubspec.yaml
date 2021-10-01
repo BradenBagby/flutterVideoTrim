@@ -1,7 +1,6 @@
 name: video_trim
 description: Trims video via code
 version: 0.0.1
-homepage: bradenbagby.com
 repository: https://github.com/BradenBagby/flutterVideoTrim
 
 environment:
